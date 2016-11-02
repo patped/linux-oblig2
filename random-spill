@@ -1,0 +1,58 @@
+#!/bin/bash
+
+sjekkTall() {
+
+  if [[ $gjettetTall = $randomTall ]]; then
+    echo "RIKTIG!! :D"
+    sleep 1
+    echo "0 for å avslutte"
+    echo "Y for å fortsette"
+    read -p "Vill du fortsette?: " gjettetTall
+  elif (( gjettetTall < randomTall  )); then
+    echo "Tallet er større"
+    sleep 1
+  else
+    echo "Tallet er mindre"
+    sleep 1
+  fi
+
+  until [[ $gjettetTall = ^[Y,0]$ ]]; do
+    if [[ $gjettetTall = Y ]]; then
+      nyttTall
+      continue
+    elif [[ $gjettetTall = 0 ]]; then
+      exit
+    else
+      clear
+      echo "Dette var ikke et alternativ"
+      echo "0 for å avslutte"
+      echo "Y for å fortsette"
+      read -p "Vill du fortsette? :"
+    fi
+  done
+}
+
+nyttTall() {
+  randomTall=$(( RANDOM / 327 ))
+}
+
+nyttTall
+
+clear
+echo "Hei! Velkommmen til random-spill."
+sleep 1
+
+until [[ $gjettetTall =~ $randomTall ]]; do
+  clear
+  echo $randomTall
+  echo "Hvis du ønsker å avslutte tast 0"
+  read -p "Gjett et tall mellom 1-100: " gjettetTall
+
+  if [[ $gjettetTall = 0 ]]; then
+    exit
+  else
+    sjekkTall
+  fi
+done
+
+exit
