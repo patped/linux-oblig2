@@ -1,13 +1,30 @@
 #!/bin/bash
 
 sjekkTall() {
-
   if [[ $gjettetTall = $randomTall ]]; then
     echo "RIKTIG!! :D"
     sleep 1
-    echo "0 for å avslutte"
-    echo "Y for å fortsette"
-    read -p "Vill du fortsette?: " gjettetTall
+    clear
+
+    while true; do
+      echo "N for å avslutte"
+      echo "Y for å fortsette"
+      read -p "Vill du fortsette?: " gjettetTall
+
+      if [[ $gjettetTall = Y || $gjettetTall = y ]]; then
+        nyttTall
+        break
+      elif [[ $gjettetTall = N || $gjettetTall = n ]]; then
+        exit
+      else
+        clear
+        echo "Dette var ikke et alternativ"
+        sleep 1
+        clear
+      fi
+
+    done
+
   elif (( gjettetTall < randomTall  )); then
     echo "Tallet er større"
     sleep 1
@@ -16,20 +33,6 @@ sjekkTall() {
     sleep 1
   fi
 
-  until [[ $gjettetTall =~ ^[Y,0]$ ]]; do
-    if [[ $gjettetTall = Y ]]; then
-      nyttTall
-      continue
-    elif [[ $gjettetTall = 0 ]]; then
-      exit
-    else
-      clear
-      echo "Dette var ikke et alternativ"
-      echo "0 for å avslutte"
-      echo "Y for å fortsette"
-      read -p "Vill du fortsette? :"
-    fi
-  done
 }
 
 nyttTall() {
