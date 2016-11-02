@@ -16,7 +16,7 @@ sjekkTall() {
     sleep 1
   fi
 
-  until [[ $gjettetTall = ^[Y,0]$ ]]; do
+  until [[ $gjettetTall =~ ^[Y,0]$ ]]; do
     if [[ $gjettetTall = Y ]]; then
       nyttTall
       continue
