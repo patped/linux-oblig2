@@ -1,20 +1,35 @@
 #!/bin/bash
 
-tall=$1
+teller() {
+  for (( i = 1; i <= tall; i++ )); do
+    tallgen
+    echo
+  done
+}
 
-until [[ $tall =~ ^[1-9] ]]; do
+tallgen() {
+  for (( f = 1; f <= i; f++ )); do
+    echo -n $i
+  done
+}
+
+until [[ $tall =~ ^[1-9]$ ]]; do
+
+  tall=$1
 
   clear
-
   if [[ -z $1 ]]; then
     read -p "Velg et tall mellom 1-9: " tall
   fi
 
-  if [[ $tall =~ ^[1-9] ]]; then
-    echo $tall
+  if [[ $tall =~ ^[1-9]$ ]]; then
+    teller
   else
     echo "OBS! Dette var ikke et alternativ."
     sleep 1
+    until [[ $# = 0 ]]; do
+      shift
+    done
     continue
   fi
 
