@@ -1,0 +1,21 @@
+#!/bin/bash
+
+tall=$1
+
+until [[ $tall =~ ^[1-9] ]]; do
+
+  clear
+
+  if [[ -z $1 ]]; then
+    read -p "Velg et tall mellom 1-9: " tall
+  fi
+
+  if [[ $tall =~ ^[1-9] ]]; then
+    echo $tall
+  else
+    echo "OBS! Dette var ikke et alternativ."
+    sleep 1
+    continue
+  fi
+
+done
