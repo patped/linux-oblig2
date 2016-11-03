@@ -1,0 +1,90 @@
+#!/bin/bash
+
+MIN_VERDI=1
+MAKS_VERDI=100
+
+sjekkTall() {
+  forsok=$(( forsok + 1 ))
+
+  if [[ $gjettetTall = $randomTall ]]; then
+    clear
+    echo "RIKTIG!! :D"
+    echo "Du brukte $forsok forsøk"
+    forsok=0
+    sleep 2
+    clear
+
+    while true; do
+      echo "N for å avslutte"
+      echo "Y for å fortsette"
+      read -p "Vill du fortsette?: " gjettetTall
+
+      if [[ $gjettetTall = Y || $gjettetTall = y ]]; then
+        nyttTall
+        break
+      elif [[ $gjettetTall = N || $gjettetTall = n ]]; then
+        echo "Hadet bra :("
+        sleep 1
+        clear
+        exit
+      else
+        clear
+        echo "Dette var ikke et alternativ"
+        sleep 1
+        clear
+      fi
+
+    done
+
+  elif (( gjettetTall < randomTall  )); then
+    clear
+    echo "Tallet er større"
+    sleep 1
+  else
+    clear
+    echo "Tallet er mindre"
+    sleep 1
+  fi
+
+}
+
+nyttTall() {
+  randomTall=$(( RANDOM / 327 ))
+}
+
+nyttTall
+
+clear
+echo "Hei! Velkommmen til random-spill."
+sleep 2
+
+until [[ $gjettetTall =~ $randomTall ]]; do
+  clear
+  echo $randomTall
+  echo "Hvis du ønsker å avslutte tast 0"
+  read -p "Gjett et tall mellom 1-100: " gjettetTall
+
+  if [[ $gjettetTall = 0 ]]; then
+    clear
+    echo "Hadet bra :("
+    sleep 1
+    clear
+    exit
+  elif [[ $gjettetTall =~ ^-?[0-9]+$ ]]; then
+    if [[ ! (gjettetTall -ge MIN_VERDI && gjettetTall -le MAKS_VERDI) ]]; then
+      clear
+      echo "Dette tallet er ikke innenfor 1-100"
+      sleep 2
+      continue
+    else
+    sjekkTall
+    fi
+  else
+    clear
+    echo "Dette var ikke et alternativ"
+    sleep 1
+    continue
+  fi
+done
+
+exit
