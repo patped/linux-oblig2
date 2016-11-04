@@ -1,1 +1,34 @@
 #!/bin/bash
+totKat=0
+totFil=0
+totSLink=0
+
+clear
+
+if [[ -d $1 ]]; then
+  katalog=$1/*
+else
+  katalog=*
+fi
+
+for i in $katalog; do
+  if [[ -d $i ]]; then
+    totKat=$(( totKat + 1 ))
+  fi
+
+  if [[ -f $i ]]; then
+    totFil=$(( totFil + 1 ))
+  fi
+
+  if [[ -h $i ]]; then
+    totSLink=$(( totSLink + 1))
+  fi
+
+  if [[ -e $i ]]; then
+    total=$(( total + 1 ))
+  fi
+done
+
+echo -e "\n$totFil filer, $totSLink symbolske linker, $totKat kataloger, totalt $total\n"
+
+exit
