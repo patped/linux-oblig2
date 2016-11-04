@@ -5,6 +5,25 @@ totSLink=0
 katalog=*
 program=$(basename $0)
 
+teller(){
+  for i in $katalog; do
+    if [[ -d $i ]]; then
+      totKat=$(( totKat + 1 ))
+    fi
+
+    if [[ -f $i ]]; then
+      totFil=$(( totFil + 1 ))
+    fi
+
+    if [[ -L $i ]]; then
+      totSLink=$(( totSLink + 1))
+    fi
+
+    if [[ -e $i ]]; then
+      total=$(( total + 1 ))
+    fi
+  done
+}
 
 
 clear
@@ -30,7 +49,7 @@ if [[ -n $1 ]]; then
           fi
         done
 
-          echo -e "Det er totalt $totSLink symbolske linker i denne mappen\n"
+          echo -e "Det er $totSLink symbolske linker i denne mappen\n"
 
       fi
 
@@ -42,7 +61,7 @@ if [[ -n $1 ]]; then
           fi
         done
 
-        echo -e "Det er totalt $totKat kataloger i denne mappen\n"
+        echo -e "Det er $totKat kataloger i denne mappen\n"
 
       fi
 
@@ -54,7 +73,7 @@ if [[ -n $1 ]]; then
           fi
         done
 
-        echo -e "Det er totalt $totFil filer i denne mappen\n"
+        echo -e "Det er $totFil filer i denne mappen\n"
 
       fi
 
@@ -64,7 +83,8 @@ if [[ -n $1 ]]; then
           $program [mappe] [option]...\n
           eks:
           $program mappe1 -f -L
-          $program mappe1 -f mappe2 -L\n
+          $program mappe1 -f mappe2 -L
+          $program mappe1 -f mappe2 mappe3 -f -L\n
           Opsjoner:
           -f rapporterer antall filer
           -L rapporterer antall symbolske linker
@@ -89,23 +109,7 @@ if [[ -n $1 ]]; then
         totSLink=0
         total=0
 
-        for i in $katalog; do
-          if [[ -d $i ]]; then
-            totKat=$(( totKat + 1 ))
-          fi
-
-          if [[ -f $i ]]; then
-            totFil=$(( totFil + 1 ))
-          fi
-
-          if [[ -L $i ]]; then
-            totSLink=$(( totSLink + 1))
-          fi
-
-          if [[ -e $i ]]; then
-            total=$(( total + 1 ))
-          fi
-        done
+        teller
 
         echo -e "\nAnalyse for mappen $(dirname "$katalog"):"
         echo -e "$totFil filer, $totSLink symbolske linker, $totKat kataloger, totalt $total\n"
@@ -122,24 +126,7 @@ if [[ -n $1 ]]; then
 
 else
 
-  for i in $katalog; do
-    if [[ -d $i ]]; then
-      totKat=$(( totKat + 1 ))
-    fi
-
-    if [[ -f $i ]]; then
-      totFil=$(( totFil + 1 ))
-    fi
-
-    if [[ -L $i ]]; then
-      totSLink=$(( totSLink + 1))
-    fi
-
-    if [[ -e $i ]]; then
-      total=$(( total + 1 ))
-    fi
-  done
-
+  teller
   echo -e "\n$totFil filer, $totSLink symbolske linker, $totKat kataloger, totalt $total\n"
 
 fi
