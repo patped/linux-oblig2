@@ -12,65 +12,111 @@ clear
 if [[ -n $1 ]]; then
 
   until [[ $# = 0 ]]; do
-    if [[ -d $1 ]]; then
-      katalog=$1/*
-      echo -e "\nAnalyse for mappen $(dirname "$katalog"):"
-    fi
 
-    if [[ $1 = -L ]]; then
+    until [[ $# = 0 ]]; do
 
-      for i in $katalog; do
-        if [[ -L $i ]]; then
-          totSLink=$(( totSLink + 1 ))
-        fi
-      done
+      if [[ -d $1 && -n $2 && ! -d $2 ]]; then
+        katalog=$1/*
+        echo -e "\nAnalyse for mappen $(dirname "$katalog"):"
+      elif [[ -d $1 ]]; then
+        break
+      fi
 
-        echo -e "\nDet er totalt $totSLink symbolske linker i denne mappen"
+      if [[ $1 = -L ]]; then
 
-    fi
+        for i in $katalog; do
+          if [[ -L $i ]]; then
+            totSLink=$(( totSLink + 1 ))
+          fi
+        done
 
-    if [[ $1 = -d ]]; then
+          echo -e "Det er totalt $totSLink symbolske linker i denne mappen\n"
 
-      for i in $katalog; do
-        if [[ -d $i ]]; then
-          totKat=$(( totKat + 1 ))
-        fi
-      done
+      fi
 
-        echo -e "\nDet er totalt $totKat kataloger i denne mappen"
+      if [[ $1 = -d ]]; then
 
-    fi
+        for i in $katalog; do
+          if [[ -d $i ]]; then
+            totKat=$(( totKat + 1 ))
+          fi
+        done
 
-    if [[ $1 = -f ]]; then
+        echo -e "Det er totalt $totKat kataloger i denne mappen\n"
 
-      for i in $katalog; do
-        if [[ -f $i ]]; then
-          totFil=$(( totFil + 1 ))
-        fi
-      done
+      fi
 
-        echo -e "\nDet er totalt $totFil filer i denne mappen"
+      if [[ $1 = -f ]]; then
 
-    fi
+        for i in $katalog; do
+          if [[ -f $i ]]; then
+            totFil=$(( totFil + 1 ))
+          fi
+        done
 
-    if [[ $1 = -h ]]; then
-      clear
-      echo -e "\nProgrammet brukes slik:\n
-        $program [mappe] [option]...\n
-        eks:
-        $program mappe1 -f -L
-        $program mappe1 -f mappe2 -L\n
-        Opsjoner:
-        -f rapporterer antall filer
-        -L rapporterer antall symbolske linker
-        -d rapporterer antall kataloger
-        -h gir «usage» og avslutter
-      "
+        echo -e "Det er totalt $totFil filer i denne mappen\n"
 
-      exit
-    fi
+      fi
 
-    shift
+      if [[ $1 = -h ]]; then
+        clear
+        echo -e "\nProgrammet brukes slik:\n
+          $program [mappe] [option]...\n
+          eks:
+          $program mappe1 -f -L
+          $program mappe1 -f mappe2 -L\n
+          Opsjoner:
+          -f rapporterer antall filer
+          -L rapporterer antall symbolske linker
+          -d rapporterer antall kataloger
+          -h gir «usage» og avslutter
+        "
+
+        exit
+
+      fi
+
+      shift
+
+    done
+
+    until [[ $# = 0 ]]; do
+
+      if [[ -d $1 && -d $2 || -d $1 && ! -n $2 ]]; then
+        katalog=$1/*
+        totKat=0
+        totFil=0
+        totSLink=0
+        total=0
+
+        for i in $katalog; do
+          if [[ -d $i ]]; then
+            totKat=$(( totKat + 1 ))
+          fi
+
+          if [[ -f $i ]]; then
+            totFil=$(( totFil + 1 ))
+          fi
+
+          if [[ -L $i ]]; then
+            totSLink=$(( totSLink + 1))
+          fi
+
+          if [[ -e $i ]]; then
+            total=$(( total + 1 ))
+          fi
+        done
+
+        echo -e "\nAnalyse for mappen $(dirname "$katalog"):"
+        echo -e "$totFil filer, $totSLink symbolske linker, $totKat kataloger, totalt $total\n"
+
+        shift
+
+      else
+        break
+      fi
+
+    done
 
   done
 
@@ -97,6 +143,5 @@ else
   echo -e "\n$totFil filer, $totSLink symbolske linker, $totKat kataloger, totalt $total\n"
 
 fi
-
 
 exit
