@@ -2,7 +2,6 @@
 totKat=0
 totFil=0
 totSLink=0
-VALG=$1
 katalog=*
 program=$(basename $0)
 
@@ -13,6 +12,10 @@ clear
 if [[ -n $1 ]]; then
 
   until [[ $# = 0 ]]; do
+    if [[ -d $1 ]]; then
+      katalog=$1/*
+      echo -e "\nAnalyse for mappen $(dirname "$katalog"):"
+    fi
 
     if [[ $1 = -L ]]; then
 
@@ -22,11 +25,7 @@ if [[ -n $1 ]]; then
         fi
       done
 
-      if [[ $(dirname "$katalog" = . ) ]]; then
         echo -e "\nDet er totalt $totSLink symbolske linker i denne mappen"
-      else
-        echo -e "\nDet er totalt $totSLink symbolske linker i $katalog"
-      fi
 
     fi
 
@@ -38,11 +37,7 @@ if [[ -n $1 ]]; then
         fi
       done
 
-      if [[ $(dirname "$katalog" = . ) ]]; then
         echo -e "\nDet er totalt $totKat kataloger i denne mappen"
-      else
-        echo -e "\nDet er totalt $totKat kataloger i $katalog"
-      fi
 
     fi
 
@@ -54,11 +49,7 @@ if [[ -n $1 ]]; then
         fi
       done
 
-      if [[ $(dirname "$katalog" = . ) ]]; then
         echo -e "\nDet er totalt $totFil filer i denne mappen"
-      else
-        echo -e "\nDet er totalt $totFil filer i $katalog"
-      fi
 
     fi
 
