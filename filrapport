@@ -2,33 +2,110 @@
 totKat=0
 totFil=0
 totSLink=0
+VALG=$1
+katalog=*
+program=$(basename $0)
+
+
 
 clear
 
-if [[ -d $1 ]]; then
-  katalog=$1/*
+if [[ -n $1 ]]; then
+
+  until [[ $# = 0 ]]; do
+
+    if [[ $1 = -L ]]; then
+
+      for i in $katalog; do
+        if [[ -L $i ]]; then
+          totSLink=$(( totSLink + 1 ))
+        fi
+      done
+
+      if [[ $(dirname "$katalog" = . ) ]]; then
+        echo -e "\nDet er totalt $totSLink symbolske linker i denne mappen"
+      else
+        echo -e "\nDet er totalt $totSLink symbolske linker i $katalog"
+      fi
+
+    fi
+
+    if [[ $1 = -d ]]; then
+
+      for i in $katalog; do
+        if [[ -d $i ]]; then
+          totKat=$(( totKat + 1 ))
+        fi
+      done
+
+      if [[ $(dirname "$katalog" = . ) ]]; then
+        echo -e "\nDet er totalt $totKat kataloger i denne mappen"
+      else
+        echo -e "\nDet er totalt $totKat kataloger i $katalog"
+      fi
+
+    fi
+
+    if [[ $1 = -f ]]; then
+
+      for i in $katalog; do
+        if [[ -f $i ]]; then
+          totFil=$(( totFil + 1 ))
+        fi
+      done
+
+      if [[ $(dirname "$katalog" = . ) ]]; then
+        echo -e "\nDet er totalt $totFil filer i denne mappen"
+      else
+        echo -e "\nDet er totalt $totFil filer i $katalog"
+      fi
+
+    fi
+
+    if [[ $1 = -h ]]; then
+      clear
+      echo -e "\nProgrammet brukes slik:\n
+        $program [mappe] [option]...\n
+        eks:
+        $program mappe1 -f -L
+        $program mappe1 -f mappe2 -L\n
+        Opsjoner:
+        -f rapporterer antall filer
+        -L rapporterer antall symbolske linker
+        -d rapporterer antall kataloger
+        -h gir «usage» og avslutter
+      "
+
+      exit
+    fi
+
+    shift
+
+  done
+
 else
-  katalog=*
+
+  for i in $katalog; do
+    if [[ -d $i ]]; then
+      totKat=$(( totKat + 1 ))
+    fi
+
+    if [[ -f $i ]]; then
+      totFil=$(( totFil + 1 ))
+    fi
+
+    if [[ -L $i ]]; then
+      totSLink=$(( totSLink + 1))
+    fi
+
+    if [[ -e $i ]]; then
+      total=$(( total + 1 ))
+    fi
+  done
+
+  echo -e "\n$totFil filer, $totSLink symbolske linker, $totKat kataloger, totalt $total\n"
+
 fi
 
-for i in $katalog; do
-  if [[ -d $i ]]; then
-    totKat=$(( totKat + 1 ))
-  fi
-
-  if [[ -f $i ]]; then
-    totFil=$(( totFil + 1 ))
-  fi
-
-  if [[ -h $i ]]; then
-    totSLink=$(( totSLink + 1))
-  fi
-
-  if [[ -e $i ]]; then
-    total=$(( total + 1 ))
-  fi
-done
-
-echo -e "\n$totFil filer, $totSLink symbolske linker, $totKat kataloger, totalt $total\n"
 
 exit
