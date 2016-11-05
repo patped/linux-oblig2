@@ -1,18 +1,5 @@
 #!/bin/bash
 
-teller() {
-  for (( i = 1; i <= tall; i++ )); do
-    tallgen
-    echo
-  done
-}
-
-tallgen() {
-  for (( f = 1; f <= i; f++ )); do
-    echo -n $i
-  done
-}
-
 until [[ $tall =~ ^[1-9]$ ]]; do
 
   tall=$1
@@ -23,14 +10,32 @@ until [[ $tall =~ ^[1-9]$ ]]; do
   fi
 
   if [[ $tall =~ ^[1-9]$ ]]; then
-    teller
+
+    for (( i = 1; i <= tall; i++ )); do
+
+      for (( j = i; j < 10; j++ )); do
+        echo -n " "
+      done
+
+      for (( f = 1; f <= i; f++ )); do
+        echo -n "$i "
+      done
+
+      echo
+
+    done
+
   else
+
     echo "OBS! Dette var ikke et alternativ."
     sleep 1
+
     until [[ $# = 0 ]]; do
       shift
     done
+
     continue
+
   fi
 
 done
