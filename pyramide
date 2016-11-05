@@ -12,10 +12,17 @@ until [[ $tall =~ ^[1-9]$ ]]; do
   if [[ $tall =~ ^[1-9]$ ]]; then
 
     for (( i = 1; i <= tall; i++ )); do
-      for (( f = 1; f <= i; f++ )); do
-        echo -n $i
+
+      for (( j = i; j < 10; j++ )); do
+        echo -n " "
       done
+
+      for (( f = 1; f <= i; f++ )); do
+        echo -n "$i "
+      done
+
       echo
+
     done
 
   else
