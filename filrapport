@@ -49,7 +49,7 @@ if [[ -n $1 ]]; then
           fi
         done
 
-          echo -e "Det er $totSLink symbolske linker i denne mappen\n"
+        echo -e "Det er $totSLink symbolske linker i denne mappen\n"
 
       fi
 
