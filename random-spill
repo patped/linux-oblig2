@@ -3,56 +3,6 @@
 MIN_VERDI=1
 MAKS_VERDI=100
 
-sjekkTall() {
-  forsok=$(( forsok + 1 ))
-
-  if [[ $INPUT = $randomTall ]]; then
-    clear
-    echo "RIKTIG!! :D"
-    echo "Du brukte $forsok forsøk"
-    forsok=0
-    sleep 2
-    clear
-
-    while true; do
-      echo "N for å avslutte"
-      echo "Y for å fortsette"
-      read -p "Vill du fortsette?: " INPUT
-
-      case $INPUT in
-        Y | y )
-          nyttTall
-          break
-          ;;
-        N | n )
-          clear
-          echo "Hadet bra :("
-          sleep 1
-          clear
-          exit
-          ;;
-        * )
-          clear
-          echo "Dette var ikke et alternativ"
-          sleep 1
-          clear
-          ;;
-      esac
-
-    done
-
-  elif (( INPUT < randomTall  )); then
-    clear
-    echo "Tallet er større"
-    sleep 1
-  else
-    clear
-    echo "Tallet er mindre"
-    sleep 1
-  fi
-
-}
-
 nyttTall() {
   randomTall=$(( RANDOM / 327 ))
 }
@@ -82,14 +32,61 @@ until [[ $INPUT =~ $randomTall ]]; do
       sleep 2
       continue
     else
-    sjekkTall
+      forsok=$(( forsok + 1 ))
+
+      if [[ $INPUT = $randomTall ]]; then
+        clear
+        echo "RIKTIG!! :D"
+        echo "Du brukte $forsok forsøk"
+        forsok=0
+        sleep 2
+        clear
+
+        while true; do
+          echo "N for å avslutte"
+          echo "Y for å fortsette"
+          read -p "Vill du fortsette?: " INPUT
+
+          case $INPUT in
+            Y | y )
+              nyttTall
+              break
+              ;;
+            N | n )
+              clear
+              echo "Hadet bra :("
+              sleep 1
+              clear
+              exit
+              ;;
+            * )
+              clear
+              echo "Dette var ikke et alternativ"
+              sleep 1
+              clear
+              ;;
+          esac
+        done
+
+      elif (( INPUT < randomTall  )); then
+        clear
+        echo "Tallet er større"
+        sleep 1
+      else
+        clear
+        echo "Tallet er mindre"
+        sleep 1
+      fi
+
     fi
+
   else
     clear
     echo "Dette var ikke et alternativ"
     sleep 1
     continue
   fi
+
 done
 
 exit
