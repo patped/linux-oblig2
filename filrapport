@@ -1,10 +1,12 @@
 #!/bin/bash
+mAnalyse=0
 kat=0
 fil=0
 sLink=0
 totKat=0
 totFil=0
 totSLink=0
+total=0
 katalog=*
 program=$(basename $0)
 
@@ -12,12 +14,14 @@ teller(){
   totSLink=0
   totFil=0
   totKat=0
+  total=0
   if [[ $sLink = 1 ]]; then
 
   for i in $katalog; do
-   if [[ -L $i ]]; then
-     totSLink=$(( totSLink + 1 ))
-   fi
+    if [[ -L $i ]]; then
+      mAnalyse=1
+      totSLink=$(( totSLink + 1 ))
+    fi
   done
 
   echo -e "Det er $totSLink symbolske linker i denne mappen\n"
@@ -27,9 +31,10 @@ teller(){
   if [[ $kat = 1 ]]; then
 
   for i in $katalog; do
-   if [[ -d $i ]]; then
-     totKat=$(( totKat + 1 ))
-   fi
+    if [[ -d $i ]]; then
+      mAnalyse=1
+      totKat=$(( totKat + 1 ))
+    fi
   done
 
   echo -e "Det er $totKat kataloger i denne mappen\n"
@@ -40,7 +45,8 @@ teller(){
 
   for i in $katalog; do
    if [[ -f $i ]]; then
-     totFil=$(( totFil + 1 ))
+      mAnalyse=1
+      totFil=$(( totFil + 1 ))
    fi
   done
 
@@ -50,6 +56,10 @@ teller(){
 }
 
 tellerAlt(){
+  totSLink=0
+  totFil=0
+  totKat=0
+  total=0
   for i in $katalog; do
     if [[ -d $i ]]; then
       totKat=$(( totKat + 1 ))
@@ -67,6 +77,9 @@ tellerAlt(){
       total=$(( total + 1 ))
     fi
   done
+
+  echo -e "\n$totFil filer, $totSLink symbolske linker, $totKat kataloger, totalt $total\n"
+
 }
 
 
@@ -129,7 +142,13 @@ if [[ -n $1 ]]; then
 
     echo -e "\nAnalyse for mappen $(dirname "$katalog"):"
 
+    if [[ $mAnalyse = 0 ]]; then
+      tellerAlt
+    else
+
     teller
+
+    fi
 
     shift
 
@@ -138,7 +157,6 @@ if [[ -n $1 ]]; then
 else
 
 tellerAlt
-echo -e "\n$totFil filer, $totSLink symbolske linker, $totKat kataloger, totalt $total\n"
 
 fi
 
