@@ -1,4 +1,5 @@
 #!/bin/bash
+##Deltagere er Patrick Pedersen og Khoi Nguyen Hoang
 mAnalyse=0
 kat=0
 fil=0
@@ -85,7 +86,7 @@ tellerAlt(){
 
 clear
 
-# For å sjekke om du har angitt noen opsjoner ellers går den ned til linje 145.
+# For å sjekke om du har angitt noen opsjoner ellers går den ned til linje 146.
 
 if [[ -n $1 ]]; then
 
@@ -98,7 +99,7 @@ if [[ -n $1 ]]; then
 
     until [[ $# = 0 ]]; do
 
-      #Test for å sjekke om mappen har opsjoner. Hvis ikke hopper den ut av løkken og går ned til linje 116.
+      #Test for å sjekke om mappen har opsjoner. Hvis ikke hopper den ut av løkken og går ned til linje 117.
 
       if [[ -d $1 && -n $2 && ! -d $2 ]]; then
         katalog=$1/*
@@ -202,7 +203,7 @@ if [[ -n $1 ]]; then
 
     done
 
-  #Hopper opp til linje 38.
+  #Hopper opp til linje 39.
   done
 
 else
