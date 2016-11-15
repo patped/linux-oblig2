@@ -7,12 +7,14 @@ nyttTall() {
   randomTall=$(( RANDOM / 327 ))
 }
 
+#Produserer et nytt random tall
 nyttTall
 
 clear
 echo "Hei! Velkommmen til random-spill."
 sleep 2
 
+#Løkke for å holde spille gående til tallet er blitt gjettet riktig.
 until [[ $INPUT =~ $randomTall ]]; do
   clear
 #  Hvis du vill se ritkig svar, "uncomment" linjen under.
@@ -20,21 +22,28 @@ until [[ $INPUT =~ $randomTall ]]; do
   echo "Hvis du ønsker å avslutte tast 0"
   read -p "Gjett et tall mellom 1-100: " INPUT
 
+  #Sjekker om input er null og avslutter
   if [[ $INPUT = 0 ]]; then
     clear
     echo "Hadet bra :("
     sleep 1
     clear
     exit
+
+    #sjeker om det er bare tall i input ellers går ned til linje 96.
   elif [[ $INPUT =~ ^-?[0-9]+$ ]]; then
+    #sjekker om tallet er mellom 1-100
     if [[ ! (INPUT -ge MIN_VERDI && INPUT -le MAKS_VERDI) ]]; then
       clear
       echo "Dette tallet er ikke innenfor 1-100"
       sleep 2
       continue
     else
+
+      #Teller antall forsøk du har brukt
       forsok=$(( forsok + 1 ))
 
+      #Sjeker om tallet er riktig
       if [[ $INPUT = $randomTall ]]; then
         clear
         echo "RIKTIG!! :D"
@@ -43,6 +52,7 @@ until [[ $INPUT =~ $randomTall ]]; do
         sleep 2
         clear
 
+        #Meny løkke etter du har gjettet riktig tall
         while true; do
           echo "N for å avslutte"
           echo "Y for å fortsette"
@@ -69,10 +79,12 @@ until [[ $INPUT =~ $randomTall ]]; do
           esac
         done
 
+      #Sjekker om tallet er større enn gjettettall
       elif (( INPUT < randomTall  )); then
         clear
         echo "Tallet er større"
         sleep 1
+      #Sjekker om tallet er mindre
       else
         clear
         echo "Tallet er mindre"
