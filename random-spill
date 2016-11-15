@@ -60,7 +60,8 @@ sleep 2
 
 until [[ $gjettetTall =~ $randomTall ]]; do
   clear
-  echo $randomTall
+#  Hvis du vill se ritkig svar, "uncomment" linjen under.
+#  echo $randomTall
   echo "Hvis du ønsker å avslutte tast 0"
   read -p "Gjett et tall mellom 1-100: " gjettetTall
 
