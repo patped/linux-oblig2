@@ -85,22 +85,67 @@ tellerAlt(){
 
 clear
 
+# For å sjekke om du har angitt noen opsjoner ellers går den ned til linje 145.
+
 if [[ -n $1 ]]; then
 
+  #Løkke for å kunne bytte mellom spesific opsjons analyse av mapper eller full analyse av mapper
+  #til det ikke er flere parametere.
 
-  until [[ -d $1 || $# = 0 ]]; do
+  until [[ $# = 0 ]]; do
 
-    case $1 in
-      -L )
-        sLink=1
-        ;;
-      -d )
-        kat=1
-        ;;
-      -f )
-        fil=1
-        ;;
-      -h )
+    #Løkke for spesifikk analyse
+
+    until [[ $# = 0 ]]; do
+
+      #Test for å sjekke om mappen har opsjoner. Hvis ikke hopper den ut av løkken og går ned til linje 116.
+
+      if [[ -d $1 && -n $2 && ! -d $2 ]]; then
+        katalog=$1/*
+        echo -e "\nAnalyse for mappen $(dirname "$katalog"):"
+      elif [[ -d $1 ]]; then
+        break
+      fi
+
+      #Tester om hvem opsjoner som har blitt valgt.
+
+      if [[ $1 = -L ]]; then
+
+        for i in $katalog; do
+          if [[ -L $i ]]; then
+            totSLink=$(( totSLink + 1 ))
+          fi
+        done
+
+        echo -e "Det er $totSLink symbolske linker i denne mappen\n"
+
+      fi
+
+      if [[ $1 = -d ]]; then
+
+        for i in $katalog; do
+          if [[ -d $i ]]; then
+            totKat=$(( totKat + 1 ))
+          fi
+        done
+
+        echo -e "Det er $totKat kataloger i denne mappen\n"
+
+      fi
+
+      if [[ $1 = -f ]]; then
+
+        for i in $katalog; do
+          if [[ -f $i ]]; then
+            totFil=$(( totFil + 1 ))
+          fi
+        done
+
+        echo -e "Det er $totFil filer i denne mappen\n"
+
+      fi
+
+      if [[ $1 = -h ]]; then
         clear
         echo -e "\nProgrammet brukes slik:\n
           $program [option]... [mappe]...\n
@@ -130,15 +175,18 @@ if [[ -n $1 ]]; then
     teller
   fi
 
-  until [[ $# = 0 ]]; do
+    #Løkke for full analyse av mappen
 
-    if [[ ! -d $1 ]]; then
-      clear
-      echo -e "\nOBS! Feil syntax. Sjekk ut -h for usage\n"
-      exit
-    else
-      katalog=$1/*
-    fi
+    until [[ $# = 0 ]]; do
+
+      #Test for å sjekke at mappen ikke har opsjoner ellers hopper den ut av løkken.
+
+      if [[ -d $1 && -d $2 || -d $1 && ! -n $2 ]]; then
+        katalog=$1/*
+        totKat=0
+        totFil=0
+        totSLink=0
+        total=0
 
     echo -e "\nAnalyse for mappen $(dirname "$katalog"):"
 
@@ -150,8 +198,11 @@ if [[ -n $1 ]]; then
 
     fi
 
-    shift
 
+
+    done
+
+  #Hopper opp til linje 38.
   done
 
 else
