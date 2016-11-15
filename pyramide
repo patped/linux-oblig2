@@ -1,22 +1,26 @@
 #!/bin/bash
-
+#Løkke for at tallet mellom programmet ikke skal avsluttes før tallet er mellom 1-9.
 until [[ $tall =~ ^[1-9]$ ]]; do
 
   tall=$1
 
   clear
+  #Sjekker om det er et tall i $1 ellers hopper ned til linje 32.
   if [[ -z $1 ]]; then
     read -p "Velg et tall mellom 1-9: " tall
   fi
-
+  #Sjekker om tallet er mellom 1-9
   if [[ $tall =~ ^[1-9]$ ]]; then
 
+    #Løkke for produsere tall opptil tallet du valgte.
     for (( i = 1; i <= tall; i++ )); do
 
+      #Løkke for å lage mellomrom opptil 10 med utgangspunkt i hvor mange tall som har blitt produsert.
       for (( j = i; j < 10; j++ )); do
         echo -n " "
       done
 
+      #Løkke for å produsere x antall tall i forhold til hvor mange som har blitt produsert før.
       for (( f = 1; f <= i; f++ )); do
         echo -n "$i "
       done
@@ -30,6 +34,7 @@ until [[ $tall =~ ^[1-9]$ ]]; do
     echo "OBS! Dette var ikke et alternativ."
     sleep 1
 
+    #Passer på at paramter listen tømmes
     until [[ $# = 0 ]]; do
       shift
     done
