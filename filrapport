@@ -103,11 +103,11 @@ if [[ -n $1 ]]; then
       -h )
         clear
         echo -e "\nProgrammet brukes slik:\n
-          $program [mappe] [option]...\n
+          $program [option]... [mappe]...\n
           eks:
-          $program mappe1 -f -L
-          $program mappe1 -f mappe2 -L
-          $program mappe1 -f mappe2 mappe3 -f -L\n
+          $program -f -L mappe1
+          $program -f -L mappe1 mappe2
+          $program -f mappe1 mappe2 mappe3\n
           Opsjoner:
           -f rapporterer antall filer
           -L rapporterer antall symbolske linker
