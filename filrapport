@@ -1,11 +1,65 @@
 #!/bin/bash
+mAnalyse=0
+kat=0
+fil=0
+sLink=0
 totKat=0
 totFil=0
 totSLink=0
+total=0
 katalog=*
 program=$(basename $0)
 
 teller(){
+  totSLink=0
+  totFil=0
+  totKat=0
+  total=0
+  if [[ $sLink = 1 ]]; then
+
+  for i in $katalog; do
+    if [[ -L $i ]]; then
+      mAnalyse=1
+      totSLink=$(( totSLink + 1 ))
+    fi
+  done
+
+  echo -e "Det er $totSLink symbolske linker i denne mappen\n"
+
+  fi
+
+  if [[ $kat = 1 ]]; then
+
+  for i in $katalog; do
+    if [[ -d $i ]]; then
+      mAnalyse=1
+      totKat=$(( totKat + 1 ))
+    fi
+  done
+
+  echo -e "Det er $totKat kataloger i denne mappen\n"
+
+  fi
+
+  if [[ $fil = 1 ]]; then
+
+  for i in $katalog; do
+   if [[ -f $i ]]; then
+      mAnalyse=1
+      totFil=$(( totFil + 1 ))
+   fi
+  done
+
+  echo -e "Det er $totFil filer i denne mappen\n"
+
+  fi
+}
+
+tellerAlt(){
+  totSLink=0
+  totFil=0
+  totKat=0
+  total=0
   for i in $katalog; do
     if [[ -d $i ]]; then
       totKat=$(( totKat + 1 ))
@@ -23,6 +77,9 @@ teller(){
       total=$(( total + 1 ))
     fi
   done
+
+  echo -e "\n$totFil filer, $totSLink symbolske linker, $totKat kataloger, totalt $total\n"
+
 }
 
 
@@ -30,104 +87,76 @@ clear
 
 if [[ -n $1 ]]; then
 
-  until [[ $# = 0 ]]; do
 
-    until [[ $# = 0 ]]; do
+  until [[ -d $1 || $# = 0 ]]; do
 
-      if [[ -d $1 && -n $2 && ! -d $2 ]]; then
-        katalog=$1/*
-        echo -e "\nAnalyse for mappen $(dirname "$katalog"):"
-      elif [[ -d $1 ]]; then
-        break
-      fi
-
-      if [[ $1 = -L ]]; then
-
-        for i in $katalog; do
-          if [[ -L $i ]]; then
-            totSLink=$(( totSLink + 1 ))
-          fi
-        done
-
-        echo -e "Det er $totSLink symbolske linker i denne mappen\n"
-
-      fi
-
-      if [[ $1 = -d ]]; then
-
-        for i in $katalog; do
-          if [[ -d $i ]]; then
-            totKat=$(( totKat + 1 ))
-          fi
-        done
-
-        echo -e "Det er $totKat kataloger i denne mappen\n"
-
-      fi
-
-      if [[ $1 = -f ]]; then
-
-        for i in $katalog; do
-          if [[ -f $i ]]; then
-            totFil=$(( totFil + 1 ))
-          fi
-        done
-
-        echo -e "Det er $totFil filer i denne mappen\n"
-
-      fi
-
-      if [[ $1 = -h ]]; then
+    case $1 in
+      -L )
+        sLink=1
+        ;;
+      -d )
+        kat=1
+        ;;
+      -f )
+        fil=1
+        ;;
+      -h )
         clear
         echo -e "\nProgrammet brukes slik:\n
-          $program [mappe] [option]...\n
+          $program [option]... [mappe]...\n
           eks:
-          $program mappe1 -f -L
-          $program mappe1 -f mappe2 -L
-          $program mappe1 -f mappe2 mappe3 -f -L\n
+          $program -f -L mappe1
+          $program -f -L mappe1 mappe2
+          $program -f mappe1 mappe2 mappe3\n
           Opsjoner:
           -f rapporterer antall filer
           -L rapporterer antall symbolske linker
           -d rapporterer antall kataloger
           -h gir «usage» og avslutter
         "
-
         exit
+        ;;
+      * )
+        clear
+        echo -e "\nOBS! Feil syntax. Sjekk ut -h for usage\n"
+        exit
+    esac
 
-      fi
+    shift
 
-      shift
+  done
 
-    done
+  if [[ $# = 0 ]]; then
+    teller
+  fi
 
-    until [[ $# = 0 ]]; do
+  until [[ $# = 0 ]]; do
 
-      if [[ -d $1 && -d $2 || -d $1 && ! -n $2 ]]; then
-        katalog=$1/*
-        totKat=0
-        totFil=0
-        totSLink=0
-        total=0
+    if [[ ! -d $1 ]]; then
+      clear
+      echo -e "\nOBS! Feil syntax. Sjekk ut -h for usage\n"
+      exit
+    else
+      katalog=$1/*
+    fi
 
-        teller
+    echo -e "\nAnalyse for mappen $(dirname "$katalog"):"
 
-        echo -e "\nAnalyse for mappen $(dirname "$katalog"):"
-        echo -e "$totFil filer, $totSLink symbolske linker, $totKat kataloger, totalt $total\n"
+    if [[ $mAnalyse = 0 ]]; then
+      tellerAlt
+    else
 
-        shift
+      teller
 
-      else
-        break
-      fi
+    fi
 
-    done
+    shift
 
   done
 
 else
 
-  teller
-  echo -e "\n$totFil filer, $totSLink symbolske linker, $totKat kataloger, totalt $total\n"
+tellerAlt
 
 fi
 
