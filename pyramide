@@ -1,4 +1,5 @@
 #!/bin/bash
+#Deltagere er Patrick Pedersen og Khoi Nguyen Hoang
 #Løkke for at tallet mellom programmet ikke skal avsluttes før tallet er mellom 1-9.
 until [[ $tall =~ ^[1-9]$ ]]; do
 
